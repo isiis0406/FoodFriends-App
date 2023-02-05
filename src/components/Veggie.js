@@ -29,7 +29,6 @@ export default function Veggie() {
       const data = await api.json();
       localStorage.setItem('veggies', JSON.stringify(data.recipes));
       setVeggies(data.recipes);
-      console.log(data.recipes)
     }
   }
 

@@ -9,11 +9,23 @@ function Cuisine(){
   const [cuisine, setCuisine] = useState([]);
   const params = useParams();
   async function getCuisine(name) {
-    const data = await fetch(
-      `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY}&number=100&cuisine=${name}`
-      );
-    const recipes = await data.json();
-    setCuisine(recipes.results);
+
+
+    const check = localStorage.getItem(`${name}`);
+    if (check) {
+      setCuisine(JSON.parse(check))
+    }
+    else {
+    
+      const data = await fetch(
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY}&number=100&cuisine=${name}`
+        );
+      const recipes = await data.json();
+
+      localStorage.setItem(`${name}`, JSON.stringify(recipes.results));
+      setCuisine(recipes.results);
+      console.log(cuisine);
+    };
   } 
 
   useEffect(()=>{
@@ -23,10 +35,10 @@ function Cuisine(){
 
   return(
         <Grid>
-          {cuisine.map((recipe) => {
+          {(cuisine).map((recipe) => {
             return (
-              <Link to={`/recipe/${recipe.id}`}>
-                <Card key={recipe.id}>
+              <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                <Card >
                   <img src={recipe.image} alt={recipe.title} />
                   <h4>{recipe.title}</h4>
                 </Card>
